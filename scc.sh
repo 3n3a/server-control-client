@@ -15,7 +15,8 @@ request() {
 	method="${1:-GET}"
 	path="${2:-/}"
 	body="${3:-}"
-	cmd="curl -fsSL -X $method -H 'Authorization: Bearer $KEY' -H 'User-Agent: $UA' $EXTRA_HEADERS $BASE_URL$path -d '$body'"
+	cmd="curl -ksSL -X $method -H 'Authorization: Bearer $KEY' -H 'User-Agent: $UA' $EXTRA_HEADERS $BASE_URL$path -d '$body'"
+	echo $cmd
 	bash -c "$cmd"
 }
 
@@ -24,24 +25,36 @@ pull_image() {
 	request "POST" "/docker/images/pull" "image=$image"
 }
 
+restart_container() {
+	service_name="${1:-}"
+	request "POST" "/docker/containers/restart" "name=$service_name"
+}
+
 restart_service() {
 	service_name="${1:-}"
-	request "POST" "/systemd/restart" "service=$service_name"
+	if [[ $service_name != *".service" ]]; then
+		service_name+=".service"
+	fi
+	request "POST" "/systemd/restart" "name=$service_name"
 }
 
 # main
-# echo -e $(bash -c "curl -v -L $EXTRA_HEADERS ifconfig.me/all")
 
 # command switcher
 case $1 in
 
-	dk_pull)
+	image_pull)
 		# send pull image request
 		pull_image "$2"
 		;;
 
-	sd_restart)
-		# send systemd restart reqeust
+	container_restart)
+		# send container restart reqeust
+		restart_container "$2"
+		;;
+ 	
+	service_restart)
+		# send service restart reqeust
 		restart_service "$2"
 		;;
 
@@ -49,8 +62,8 @@ case $1 in
 		# return help
 		h="server control client - scc\n\n"
 		h+="\t$0 COMMAND [OPTIONS...]\n\n"
-		h+="\tdk_pull\t\tpull the image on the server\n\n"
-		h+="\tsd_restart\t\trestart systemd service\n\n"
+		h+="\timage_pull\t\tpull the image on the server\n\n"
+		h+="\tcontainer_restart\t\trestart container service\n\n"
 		h+="\t-h\t\tshow this help\n"
 		echo -e "$h"
 		;;
