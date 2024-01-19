@@ -38,6 +38,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: 3n3a/server-control-client
+        sparse-checkout: |
+          scc.sh
+        sparse-checkout-cone-mode: false
     - shell: bash
       env:
         SCC_BASE_URL: ${{ inputs.base_url }}
