@@ -1,0 +1,54 @@
+name: 'Server Control Client'
+description: 'Contorl your Server which is running Server Control Api'
+author: '3n3a'
+inputs:
+  base_url:
+    description: |
+      Api Base URL
+      No Default
+    required: true
+  key:
+    description: |
+      Api Key
+      No Default
+    required: true
+  command:
+    description: |
+      The command to run for scc.sh
+      No Default. Allowed values: image_pull, container_restart, service_restart
+    required: false
+  option:
+    description: |
+      The option(s) for the specified command
+      No Default. Allowed values depend on command.
+    required: false
+  # Advanced Settings
+  user_agent:
+    description: |
+      Client User Agent
+      Default is 'scc/1.0'
+    required: false
+    default: 'scc/1.0'
+  extra_headers:
+    description: |
+      Extra Headers for Curl Request
+      Default is ''. Allowed value: "-H 'Header: Value' -H 'Second: Value'"
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      env:
+        SCC_BASE_URL: ${{ inputs.base_url }}
+        SCC_KEY: ${{ inputs.key }}
+        SCC_UA: ${{ inputs.user_agent }}
+        SCC_EXTRA_HEADERS: ${{ inputs.extra_headers }}
+      run: |
+        echo "Starting to ${{ inputs.command }} on remote server."
+        ./scc.sh "${{ inputs.command }}" "${{ inputs.option }}"
+
+# Ref: https://haya14busa.github.io/github-action-brandings/
+branding:
+  icon: 'upload-cloud'
+  color: 'green'
