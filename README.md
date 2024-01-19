@@ -22,12 +22,18 @@ copy the `scs.sh` to wherever you need it
 **pull image**
 
 ```sh
-./scc.sh dk_pull <image>
+./scc.sh image_pull <image>
+```
+
+**restart container**
+
+```sh
+./scc.sh container_restart <container>
 ```
 
 **restart systemd service**
 
 ```sh
-./scc.sh sd_restart <service>
+./scc.sh service_restart <service>
 ```
 

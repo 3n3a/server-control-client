@@ -62,9 +62,14 @@ case $1 in
 		# return help
 		h="server control client - scc\n\n"
 		h+="\t$0 COMMAND [OPTIONS...]\n\n"
+		h+="\n"
+		h+="\t# docker\n\n"
 		h+="\timage_pull\t\tpull the image on the server\n\n"
-		h+="\tcontainer_restart\t\trestart container service\n\n"
-		h+="\t-h\t\tshow this help\n"
+		h+="\tcontainer_restart\trestart container service\n\n"
+		h+="\n"
+		h+="\t# systemd\n\n"
+		h+="\tservice_restart\t\trestart systemd service\n\n"
+		h+="\t-h\t\t\tshow this help\n"
 		echo -e "$h"
 		;;
 esac
