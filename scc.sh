@@ -16,7 +16,8 @@ request() {
 	path="${2:-/}"
 	body="${3:-}"
 	cmd="curl -ksSL -X $method -H 'Authorization: Bearer $KEY' -H 'User-Agent: $UA' $EXTRA_HEADERS $BASE_URL$path -d '$body'"
-	echo $cmd
+	## very dangerous next line: WILL EXPOSE YOUR TOKENS!!!!
+	#echo $cmd
 	bash -c "$cmd"
 }
 
